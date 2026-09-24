@@ -1,4 +1,21 @@
 <Solution>
+  <Folder Name="/Repository/">
+    <File Path="../AGENTS.md" />
+    <File Path="../README.md" />
+    <File Path="../.editorconfig" />
+    <File Path="../.gitignore" />
+    <File Path="../global.json" />
+  </Folder>
+  <Folder Name="/Repository/Docs/">
+    <File Path="../docs/architecture.md" />
+    <File Path="../docs/testing.md" />
+  </Folder>
+  <Folder Name="/Repository/Scripts/">
+    <File Path="../scripts/verify.ps1" />
+  </Folder>
+  <Folder Name="/Repository/CI/">
+    <File Path="../.github/workflows/verify.yml" />
+  </Folder>
   <Project Path="../tests/GM.Desktop.Tests/GM.Desktop.Tests.csproj" />
   <Project Path="GM Desktop Application/GM Desktop Application.csproj" />
 </Solution>
