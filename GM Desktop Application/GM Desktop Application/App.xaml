@@ -1,9 +1,10 @@
-﻿<Application x:Class="GM_Desktop_Application.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:GM_Desktop_Application"
-             StartupUri="MainWindow.xaml">
+<Application x:Class="GM_Desktop_Application.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="clr-namespace:GM_Desktop_Application.ViewModels" xmlns:views="clr-namespace:GM_Desktop_Application.Views">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries><ResourceDictionary Source="Views/Theme.xaml"/></ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type vm:LibraryViewModel}"><views:LibraryView/></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:CreateCampaignViewModel}"><views:CreateCampaignView/></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:CampaignViewModel}"><views:CampaignView/></DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
