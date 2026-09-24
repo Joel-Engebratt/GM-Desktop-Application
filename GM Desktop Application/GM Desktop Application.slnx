@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../tests/GM.Desktop.Tests/GM.Desktop.Tests.csproj" />
+  <Project Path="GM Desktop Application/GM Desktop Application.csproj" />
+</Solution>

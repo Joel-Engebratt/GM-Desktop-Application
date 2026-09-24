@@ -1,0 +1,18 @@
+# Visual Studio local settings
+.vs/
+*.user
+*.suo
+
+# Build and test outputs
+**/bin/
+**/obj/
+TestResults/
+artifacts/
+
+# Portable application user data
+**/Data/
+
+# Local secrets
+.env
+.env.*
+!.env.example
