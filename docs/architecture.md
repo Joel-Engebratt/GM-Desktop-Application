@@ -18,6 +18,16 @@ The solution contains a WPF application with App.xaml as its entry point. Startu
 
 Document consequential architecture decisions here, including the reason and tradeoffs.
 
+## Development inspection
+
+`tools/GM.Development.Mcp` is a separate Windows stdio MCP server using the official
+C# SDK and UI Automation. It launches its own disposable copy of the built app and
+excludes existing Data folders. This exercises real controls and normal application
+storage without introducing an MCP dependency or listener into the product. Stable
+automation IDs in the views support inspection and native control-pattern actions.
+The server cannot attach to arbitrary processes. See [development-mcp.md](development-mcp.md)
+for setup, lifecycle, and the limits of this approach compared with physical input.
+
 ## Campaign launch flow
 
 The shell switches between library, creation, and campaign ViewModels using WPF data templates.

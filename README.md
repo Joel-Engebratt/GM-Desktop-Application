@@ -41,6 +41,7 @@ Alternatively, open `GM Desktop Application/GM Desktop Application.slnx` in Visu
 - [Agent instructions](AGENTS.md)
 - [Architecture conventions](docs/architecture.md)
 - [Automated tests and UI smoke test](docs/testing.md)
+- [Development MCP: inspect and test the running UI](docs/development-mcp.md)
 
 Define acceptance criteria, implement a focused change, run verification, and review the diff.
 GitHub Actions runs the same verification script on Windows for pushes and pull requests.

@@ -9,6 +9,9 @@
 TestResults/
 artifacts/
 
+# Generated machine-specific MCP executable paths
+.codex/config.toml
+
 # Portable application user data
 **/Data/
 
