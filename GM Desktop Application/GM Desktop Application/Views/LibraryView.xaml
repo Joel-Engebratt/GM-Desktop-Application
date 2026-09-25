@@ -4,18 +4,18 @@
         <Grid Margin="0,0,0,28">
             <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
             <StackPanel Margin="0,0,20,0"><TextBlock Text="Your campaigns" Style="{StaticResource Heading}"/><TextBlock Text="Pick up where your story left off." Foreground="{StaticResource MutedBrush}"/></StackPanel>
-            <Button Grid.Column="1" Content="+ _New campaign" Command="{Binding NewCommand}" VerticalAlignment="Center"/>
+            <Button Grid.Column="1" AutomationProperties.AutomationId="Library.New" Content="+ _New campaign" Command="{Binding NewCommand}" VerticalAlignment="Center"/>
         </Grid>
         <StackPanel Grid.Row="1" Margin="0,0,0,12">
             <TextBlock Text="Loading campaigns…" Visibility="{Binding IsBusy, Converter={StaticResource BoolVisibility}}" AutomationProperties.LiveSetting="Polite"/>
             <TextBlock Text="{Binding Error}" Style="{StaticResource Message}"/>
             <ScrollViewer MaxHeight="100" VerticalScrollBarVisibility="Auto"><TextBlock Text="{Binding Warning}" Style="{StaticResource Message}" Foreground="{StaticResource BrassBrush}"/></ScrollViewer>
-            <Button Content="_Retry loading" Command="{Binding LoadCommand}" HorizontalAlignment="Left">
+            <Button AutomationProperties.AutomationId="Library.Retry" Content="_Retry loading" Command="{Binding LoadCommand}" HorizontalAlignment="Left">
                 <Button.Style><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Style.Triggers><MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding Error}" Value="{x:Null}"/><Condition Binding="{Binding Warning}" Value="{x:Null}"/></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed"/></MultiDataTrigger></Style.Triggers></Style></Button.Style>
             </Button>
         </StackPanel>
         <Grid Grid.Row="2">
-            <DataGrid x:Name="CampaignTable" ItemsSource="{Binding Campaigns}" SelectedItem="{Binding SelectedCampaign, Mode=TwoWay}"
+            <DataGrid x:Name="CampaignTable" AutomationProperties.AutomationId="Library.Campaigns" ItemsSource="{Binding Campaigns}" SelectedItem="{Binding SelectedCampaign, Mode=TwoWay}"
                       AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow"
                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
                       HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource LineBrush}"
@@ -65,12 +65,12 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsEmpty, Converter={StaticResource BoolVisibility}}">
                 <TextBlock Text="Your first story starts here" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,12"/>
                 <TextBlock Text="Create a campaign to start your library." Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,24"/>
-                <Button Content="Create campaign" Command="{Binding NewCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Center"/>
+                <Button AutomationProperties.AutomationId="Library.CreateFirst" Content="Create campaign" Command="{Binding NewCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="3" Margin="0,20,0,0">
             <TextBlock Text="{Binding CountDisplay}" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
-            <Button Content="_Open campaign →" Command="{Binding OpenCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right"/>
+            <Button AutomationProperties.AutomationId="Library.Open" Content="_Open campaign →" Command="{Binding OpenCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right"/>
         </Grid>
     </Grid>
 </UserControl>

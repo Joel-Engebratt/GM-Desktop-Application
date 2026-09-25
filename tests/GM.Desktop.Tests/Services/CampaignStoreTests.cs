@@ -30,19 +30,24 @@ namespace GM.Desktop.Tests.Services
         }
 
         [TestMethod]
-        public async Task UnsafeOrOversizedTextCannotBypassValidationThroughStore()
+        [DataRow("name-length")]
+        [DataRow("system-length")]
+        [DataRow("direction")]
+        [DataRow("control")]
+        [DataRow("surrogate")]
+        public async Task UnsafeOrOversizedTextCannotBypassValidationThroughStore(string fault)
         {
-            foreach (var draft in new[]
+            var draft = fault switch
             {
-                new CampaignDraft(new string('a', 201), "custom", "Valid"),
-                new CampaignDraft("Valid", "custom", new string('a', 101)),
-                new CampaignDraft("Hidden\u202Etext", "custom", "Valid"),
-                new CampaignDraft("Valid", "custom", "Line\nBreak"),
-                new CampaignDraft("Bad\uD800", "custom", "Valid")
-            })
-            {
-                await Assert.ThrowsAsync<ArgumentException>(() => Store.CreateAsync(draft));
-            }
+                "name-length" => new CampaignDraft(new string('a', 201), "custom", "Valid"),
+                "system-length" => new CampaignDraft("Valid", "custom", new string('a', 101)),
+                "direction" => new CampaignDraft("Hidden\u202Etext", "custom", "Valid"),
+                "control" => new CampaignDraft("Valid", "custom", "Line\nBreak"),
+                _ => new CampaignDraft("Bad\uD800", "custom", "Valid")
+            };
+
+            await Assert.ThrowsAsync<ArgumentException>(() => Store.CreateAsync(draft));
+
             Assert.IsFalse(Directory.Exists(CampaignRoot));
         }
 
@@ -112,21 +117,62 @@ namespace GM.Desktop.Tests.Services
         }
 
         [TestMethod]
-        public async Task CreateTrimsAndRoundTripsCustomMetadataWithoutChangingTimestamps()
+        public async Task CreateTrimsCampaignAndSystemNames()
         {
             var campaign = await Store.CreateAsync(new("  The Ashen Crown  ", "custom", " Pathfinder 2e "));
+
             Assert.AreEqual("The Ashen Crown", campaign.Name);
             Assert.AreEqual("Pathfinder 2e", campaign.CustomSystemName);
+        }
+
+        [TestMethod]
+        public async Task CreatePreservesRulesSystemIdentifier()
+        {
+            var campaign = await Store.CreateAsync(new("The Ashen Crown", "custom", "Pathfinder 2e"));
+
             Assert.AreEqual("custom", campaign.SystemId);
+        }
+
+        [TestMethod]
+        public async Task CreateUsesClockForBothTimestamps()
+        {
+            var campaign = await Store.CreateAsync(new("The Ashen Crown", "custom", "Pathfinder 2e"));
+
             Assert.AreEqual(Now, campaign.CreatedAt);
             Assert.AreEqual(Now, campaign.UpdatedAt);
+        }
+
+        [TestMethod]
+        public async Task ListRoundTripsMetadataWithoutRewritingDocument()
+        {
+            var campaign = await Store.CreateAsync(new("The Ashen Crown", "custom", "Pathfinder 2e"));
             var file = Path.Combine(CampaignRoot, campaign.Id.ToString("D"), "campaign.json");
             var before = await File.ReadAllTextAsync(file);
+
             var loaded = await new JsonCampaignStore(CampaignRoot).ListAsync();
+
             Assert.AreEqual(campaign, loaded.Campaigns.Single());
             Assert.AreEqual(before, await File.ReadAllTextAsync(file));
-            Assert.IsFalse(File.Exists(file + ".tmp"));
-            Assert.AreEqual(1, JsonNode.Parse(before)!["formatVersion"]!.GetValue<int>());
+        }
+
+        [TestMethod]
+        public async Task SuccessfulCreateLeavesOnlyFinalDocument()
+        {
+            var campaign = await Store.CreateAsync(new("The Ashen Crown", "custom", "Pathfinder 2e"));
+
+            var files = Directory.GetFiles(Path.Combine(CampaignRoot, campaign.Id.ToString("D")));
+
+            CollectionAssert.AreEqual(new[] { "campaign.json" }, files.Select(Path.GetFileName).ToArray());
+        }
+
+        [TestMethod]
+        public async Task CreateWritesSupportedFormatVersion()
+        {
+            var campaign = await Store.CreateAsync(new("The Ashen Crown", "custom", "Pathfinder 2e"));
+
+            var content = await File.ReadAllTextAsync(Path.Combine(CampaignRoot, campaign.Id.ToString("D"), "campaign.json"));
+
+            Assert.AreEqual(1, JsonNode.Parse(content)!["formatVersion"]!.GetValue<int>());
         }
 
         [TestMethod]
